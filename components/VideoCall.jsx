@@ -10,21 +10,23 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
+
 import {
   TwilioVideo,
   TwilioVideoLocalView,
   TwilioVideoParticipantView,
 } from 'react-native-twilio-video-webrtc';
 
-import {PERMISSIONS} from 'react-native-permissions';
-
-import styleSheet from '../styles';
+// import request permissions
 import {
   _requestAndroidAudioPermission,
   _requestAndroidCameraPermission,
   _requestIOSAudioPermissions,
   _requestIOSCameraPermissions,
-} from '../utils/getPermissions';
+} from '../utils/requestPermissions';
+
+// import styles
+import styleSheet from '../styles';
 
 const styles = StyleSheet.create(styleSheet);
 
@@ -33,10 +35,8 @@ const __ROOM_NAME = 'test-room';
 const VideoCall = () => {
   const [isAudioEnabled, setIsAudioEnabled] = React.useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = React.useState(true);
-  const [isScreenShareEnabled, setIsScreenShareEnabled] = React.useState(false);
+  // const [isScreenShareEnabled, setIsScreenShareEnabled] = React.useState(false);
   const [status, setStatus] = React.useState('disconnected');
-  const [participants, setParticipants] = React.useState(new Map());
-  const [participantCount, setParticipantCount] = React.useState([]);
   const [videoTracks, setVideoTracks] = React.useState(new Map());
   const [token, setToken] = React.useState('');
   const [isSharing, setIsSharing] = React.useState(false);
@@ -51,7 +51,6 @@ const VideoCall = () => {
   }, []);
 
   const _onConnectButtonPress = async () => {
-    
     // request permissions on Android or IOS
     if (Platform.OS === 'android') {
       await _requestAndroidCameraPermission();
@@ -73,10 +72,6 @@ const VideoCall = () => {
     setStatus('connecting');
   };
 
-  const setTwilioRef = ref => {
-    twilioVideo.current = ref;
-  };
-
   const _onEndButtonPress = () => {
     twilioVideo.current.disconnect();
   };
@@ -93,23 +88,13 @@ const VideoCall = () => {
       .then(setIsVideoEnabled(isEnabled => !isEnabled));
   };
 
-  const _onShareButtonPressed = () => {
-    twilioVideo.current.toggleScreenSharing(!isSharing);
-    setIsSharing(!isSharing);
-  };
-
   const _onFlipButtonPress = () => {
     twilioVideo.current.flipCamera();
   };
 
   const _onRoomDidConnect = room => {
     console.log(room);
-    console.log(new Map(room.participants).size);
     setStatus('connected');
-  };
-
-  const _getStats = stats => {
-    console.log(stats);
   };
 
   const _onRoomDidDisconnect = error => {
@@ -145,33 +130,8 @@ const VideoCall = () => {
     setVideoTracks(newVideoTracks);
   };
 
-  const _onNetworkLevelChanged = ({participant, isLocalUser, quality}) => {
-    console.log(
-      'Participant',
-      participant,
-      'isLocalUser',
-      isLocalUser,
-      'quality',
-      quality,
-    );
-  };
-
-  const _onDominantSpeakerDidChange = ({roomName, roomSid, participant}) => {
-    console.log(
-      'onDominantSpeakerDidChange',
-      `roomName: ${roomName}`,
-      `roomSid: ${roomSid}`,
-      'participant:',
-      participant,
-    );
-  };
-
   const _onRoomParticipantDidConnect = (room, part) => {
     console.log(room);
-  };
-
-  const getParticipantSize = () => {
-    return participants.size;
   };
 
   return (
@@ -241,7 +201,6 @@ const VideoCall = () => {
           )}
         </View>
       )}
-      
 
       <TwilioVideo
         ref={twilioVideo}
@@ -251,7 +210,6 @@ const VideoCall = () => {
         onParticipantAddedVideoTrack={_onParticipantAddedVideoTrack}
         onParticipantRemovedVideoTrack={_onParticipantRemovedVideoTrack}
         onRoomParticipantDidConnect={_onRoomParticipantDidConnect}
-        //onNetworkQualityLevelsChanged={_onNetworkLevelChanged}
       />
     </View>
   );
