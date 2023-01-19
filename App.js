@@ -12,10 +12,14 @@ import {
 } from 'react-native';
 
 // components
-import {Navigation} from './src/navigation/Navigation';
+import { Navigation } from './src/navigation/Navigation';
 
 const App = () => {
-  return <Navigation />;
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <Navigation />
+    </SafeAreaView>
+  );
 };
 
 export default App;

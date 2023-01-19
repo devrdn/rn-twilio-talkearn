@@ -8,22 +8,20 @@ const HomeScreen = ({ navigation }) => {
     });
   });
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.view}>
-        <View style={styles.content}>
-          <Pressable
-            onPress={() => navigation.navigate('VideoCall')}
-            style={styles.btn}>
-            <Text style={styles.btnText}>Video Call</Text>
-          </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate('Login')}
-            style={styles.btn}>
-            <Text style={styles.btnText}>Login</Text>
-          </Pressable>
-        </View>
+    <View style={styles.view}>
+      <View style={styles.content}>
+        <Pressable
+          onPress={() => navigation.navigate('VideoCall')}
+          style={styles.btn}>
+          <Text style={styles.btnText}>Video Call</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => navigation.navigate('Login')}
+          style={styles.btn}>
+          <Text style={styles.btnText}>Login</Text>
+        </Pressable>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
