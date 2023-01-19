@@ -1,20 +1,13 @@
-import {Dimensions, Platform} from 'react-native';
+import { Dimensions, Platform } from 'react-native';
+import { metrix } from '../theme/metrics';
 
 export default {
-  //participantVideo: {
-  //  position: 'absolute',
-  //  flex: 1,
-  //  zIndex: 2,
-  //  elevation: 2,
-  //  width: Dimensions.get('screen').width,
-  //  height: Dimensions.get('screen').height,
-  //},
   remoteVideo: {
     position: 'absolute',
-    width: Dimensions.get('screen').width,
-    height: Dimensions.get('screen').height,
+    width: metrix.screenWidth,
+    height: metrix.screenHeight,
     zIndex: 1,
-    elevation: 1
+    elevation: 1,
   },
   localVideo: {
     position: 'absolute',
@@ -58,8 +51,8 @@ export default {
     position: 'absolute',
     top: 0,
     right: 0,
-    height: Dimensions.get('screen').height,
-    width: Dimensions.get('screen').width,
+    height: metrix.screenHeight,
+    width: metrix.screenWidth,
   },
   //localVideo: {
   //  flex: 1,
