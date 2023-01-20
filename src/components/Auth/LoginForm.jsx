@@ -10,13 +10,14 @@ import {
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 
+import theme from '../../theme';
+
 // form validation
 import { yupResolver } from '@hookform/resolvers/yup';
 import LoginSchema from '../../utils/form-schemas/login.schema';
-import { fetchLogin } from '../../store/auth/asyncActions';
-import theme from '../../theme';
 
 // redux async actions
+import { fetchLogin } from '../../store/auth/asyncActions';
 
 const LoginForm = ({ errors }) => {
   const dispatch = useDispatch();
