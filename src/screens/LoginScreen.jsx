@@ -1,28 +1,14 @@
 import React from 'react';
-import { Button, Text, StyleSheet, TextInput, View, Image } from 'react-native';
+import { Text, StyleSheet, View, Image } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 
 // import images
-import loginImage from '../assets/images/loginImage.jpg';
-import authApi from '../api/authApi';
+import { selectLoginData } from '../store/auth/selectors';
+import LoginForm from '../components/Auth/LoginForm';
 
 const LoginScreen = () => {
-  // init form
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
-
-  const onSubmit = async data => {
-    const user = await authApi.login(data, err => console.log('Hello', err));
-    console.log(user);
-  };
+  const loginData = useSelector(selectLoginData);
 
   return (
     <View styles={styles.container}>
@@ -31,41 +17,11 @@ const LoginScreen = () => {
           style={styles.image}
           source={require('../assets/images/loginImage.jpg')}
         />
+        {loginData.expert.name && (
+          <Text>Loggined as {loginData.expert.name}</Text>
+        )}
       </View>
-      <View>
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              placeholder="Email"
-            />
-          )}
-          name="email"
-        />
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              placeholder="Password"
-              secureTextEntry
-            />
-          )}
-          name="password"
-        />
-        <Button title="Login" onPress={handleSubmit(onSubmit)} />
-      </View>
+      <LoginForm errors={loginData.errors} />
     </View>
   );
 };
