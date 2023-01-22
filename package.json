@@ -25,6 +25,7 @@
     "react-native-screens": "^3.18.2",
     "react-native-twilio-video-webrtc": "github:blackuy/react-native-twilio-video-webrtc",
     "react-redux": "^8.0.5",
+    "socket.io-client": "^4.5.4",
     "yup": "^0.32.11"
   },
   "devDependencies": {

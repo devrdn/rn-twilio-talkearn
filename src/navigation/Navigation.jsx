@@ -5,10 +5,41 @@ import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
+import { useSelector } from 'react-redux';
+import { selectIsAuth, selectLoginData } from '../store/auth/selectors';
+import React from 'react';
+import { io } from 'socket.io-client';
 
 const Stack = createNativeStackNavigator();
 
 export const Navigation = () => {
+  const isAuth = useSelector(selectIsAuth);
+  const user = useSelector(selectLoginData);
+
+  React.useEffect(() => {
+    if (isAuth) {
+      const socket = io('https://core.talkearn.app');
+
+      const recepientId = `expert-${user.expert.id}`;
+
+      socket.on(`connect`, () => {
+        console.log(`Connect ${socket.id}`);
+      });
+
+      socket.on(`inComingCall-${recepientId}`, () => {
+        console.log(`inComingCall ${socket.id}`);
+      });
+
+      socket.on(`startCall-${recepientId}`, () => {
+        console.log(`startCall ${socket.id}`);
+      });
+
+      socket.on(`declineCall-${recepientId}`, () => {
+        console.log(`declineCall ${socket.id}`);
+      });
+    }
+  }, [isAuth]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>

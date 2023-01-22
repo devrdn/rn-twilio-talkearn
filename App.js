@@ -15,7 +15,6 @@ import {
 import { Navigation } from './src/navigation/Navigation';
 import { Provider } from 'react-redux';
 import { store } from './src/store/store';
-
 const App = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
