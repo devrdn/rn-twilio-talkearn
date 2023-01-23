@@ -4,7 +4,7 @@ import VideoCallScreen from '../screens/VideoCallScreen';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet } from 'react-native';
+import { AppState, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import { selectIsAuth, selectLoginData } from '../store/auth/selectors';
 import React from 'react';
@@ -16,6 +16,8 @@ const Stack = createNativeStackNavigator();
 export const Navigation = () => {
   const isAuth = useSelector(selectIsAuth);
   const user = useSelector(selectLoginData);
+
+
 
   React.useEffect(() => {
     if (isAuth) {
