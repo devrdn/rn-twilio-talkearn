@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux';
 import { selectIsAuth, selectLoginData } from '../store/auth/selectors';
 import React from 'react';
 
+import notifee, { AndroidImportance } from '@notifee/react-native';
+
 import socket from '../utils/socket';
 
 const Stack = createNativeStackNavigator();
@@ -25,16 +27,41 @@ export const Navigation = () => {
         console.log(`Connect ${socket.id}`);
       });
 
-      socket.on(`inComingCall-${recepientId}`, () => {
+      socket.on(`inComingCall-${recepientId}`, async data => {
         console.log(`inComingCall ${socket.id}`);
+
+        // Test Notification
+
+        const channelId = await notifee.createChannel({
+          id: 'default',
+          name: 'Default Channel',
+          importance: AndroidImportance.HIGH,
+        });
+
+        const title = `New call from`;
+
+        await notifee.displayNotification({
+          id: 'Display Not',
+          title,
+          body: 'Main body content of the notification',
+          android: {
+            channelId,
+            actions: [
+              {
+                title: 'Okey',
+                pressAction: { id: 'okey' },
+              },
+              {
+                title: 'Dismiss',
+                pressAction: { id: 'diss' },
+              },
+            ],
+          },
+        });
       });
 
       socket.on(`startCall-${recepientId}`, () => {
         console.log(`startCall ${socket.id}`);
-      });
-
-      socket.on(`declineCall-${recepientId}`, () => {
-        console.log(`declineCall ${socket.id}`);
       });
     }
   }, [isAuth]);
