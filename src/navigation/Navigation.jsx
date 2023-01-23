@@ -8,7 +8,8 @@ import { StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import { selectIsAuth, selectLoginData } from '../store/auth/selectors';
 import React from 'react';
-import { io } from 'socket.io-client';
+
+import socket from '../utils/socket';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,8 +19,6 @@ export const Navigation = () => {
 
   React.useEffect(() => {
     if (isAuth) {
-      const socket = io('https://core.talkearn.app');
-
       const recepientId = `expert-${user.expert.id}`;
 
       socket.on(`connect`, () => {
