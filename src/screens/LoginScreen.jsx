@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 // import images
 import { selectLoginData } from '../store/auth/selectors';
-import LoginForm from '../components/Auth/LoginForm';
+import LoginForm from '../components/AuthForm/LoginForm';
 
 const LoginScreen = () => {
   const loginData = useSelector(selectLoginData);

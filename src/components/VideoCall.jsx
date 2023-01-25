@@ -26,12 +26,13 @@ import styleSheet from '../styles';
 
 // import components
 import DisconnedctedRoom from './Room/DisconnedctedRoom';
+import socket from '../utils/socket';
 
 const styles = StyleSheet.create(styleSheet);
 
 const __ROOM_NAME = 'test-room';
 
-const VideoCall = () => {
+const VideoCall = ({ newRoom, newToken }) => {
   const [isAudioEnabled, setIsAudioEnabled] = React.useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = React.useState(true);
   // const [isScreenShareEnabled, setIsScreenShareEnabled] = React.useState(false);
@@ -41,7 +42,10 @@ const VideoCall = () => {
   const [isSharing, setIsSharing] = React.useState(false);
   const twilioVideo = React.useRef(null);
 
+  // todo: change method
   React.useEffect(() => {
+    _onConnectButtonPress();
+
     return () => {
       setIsAudioEnabled(true);
       setIsVideoEnabled(false);
@@ -61,7 +65,8 @@ const VideoCall = () => {
 
     try {
       await twilioVideo.current.connect({
-        accessToken: token,
+        accessToken: newToken,
+        roomName: newRoom,
         enableNetworkQualityReporting: true,
         dominantSpeakerEnabled: true,
       });
@@ -107,7 +112,7 @@ const VideoCall = () => {
     setStatus('disconnected');
   };
 
-  const _onParticipantAddedVideoTrack = ({participant, track}) => {
+  const _onParticipantAddedVideoTrack = ({ participant, track }) => {
     console.log('onParticipantAddedVideoTrack: ', participant, track);
 
     setVideoTracks(
@@ -115,13 +120,13 @@ const VideoCall = () => {
         ...videoTracks,
         [
           track.trackSid,
-          {participantSid: participant.sid, videoTrackSid: track.trackSid},
+          { participantSid: participant.sid, videoTrackSid: track.trackSid },
         ],
       ]),
     );
   };
 
-  const _onParticipantRemovedVideoTrack = ({participant, track}) => {
+  const _onParticipantRemovedVideoTrack = ({ participant, track }) => {
     console.log('onParticipantRemovedVideoTrack: ', participant, track);
 
     const newVideoTracks = new Map(videoTracks);
@@ -135,17 +140,21 @@ const VideoCall = () => {
 
   return (
     <View style={styles.container}>
+      <Text>
+        {newRoom} and {newToken}
+      </Text>
       {status === 'disconnected' && (
-        <DisconnedctedRoom
-          getToken={token => setToken(token)}
-          onConnect={_onConnectButtonPress}
-        />
+        <Text>Connecting...</Text>
+        // <DisconnedctedRoom
+        //   getToken={token => setToken(token)}
+        //   onConnect={_onConnectButtonPress}
+        // />
       )}
 
       {(status === 'connected' || status === 'connecting') && (
         <View>
           {status === 'connected' && (
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <View>
                 {Array.from(videoTracks, ([trackSid, trackId]) => (
                   <TwilioVideoParticipantView
