@@ -42,11 +42,6 @@ const App = () => {
   // todo: temporary in this component
   // after testring make a separate component
   React.useEffect(() => {
-    const getToken = async () => {
-      const token = await messaging().getToken();
-      console.log(token);
-    };
-    getToken();
     //if (isAuth) {
     console.log('fsd', isAuth);
     setRecipientId(`expert-4`);
