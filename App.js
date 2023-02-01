@@ -26,6 +26,7 @@ import socket from './src/utils/socket';
 import ReactNativeModal from 'react-native-modal';
 import api from './src/api/axios';
 import { useNavigation } from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
 
 const App = () => {
   const isAuth = useSelector(selectIsAuth);
@@ -41,6 +42,11 @@ const App = () => {
   // todo: temporary in this component
   // after testring make a separate component
   React.useEffect(() => {
+    const getToken = async () => {
+      const token = await messaging().getToken();
+      console.log(token);
+    };
+    getToken();
     //if (isAuth) {
     console.log('fsd', isAuth);
     setRecipientId(`expert-4`);
@@ -64,8 +70,8 @@ const App = () => {
           `/calls/token?identity=${callInfo.senderId}`,
         );
         setIsModalVisible(false);
-        console.log("Token", data.token);
-        console.log("Call Info", callInfo)
+        console.log('Token', data.token);
+        console.log('Call Info', callInfo);
         nav.navigate('VideoCall', {
           room: callInfo.room,
           token: data.token,
