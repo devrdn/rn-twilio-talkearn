@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchLogin, fetchSetStatus } from './asyncActions';
+import { fetchLogin, fetchToggleAvailable } from './asyncActions';
 
 /**
  * Initial State
@@ -41,16 +41,20 @@ const authSlice = createSlice({
       state.isAuth = false;
     });
 
-    // Set Expert Status
-    builder.addCase(fetchSetStatus.fulfilled, (state, action) => {
+    // Toggle Expert Status
+    builder.addCase(fetchToggleAvailable.fulfilled, (state, action) => {
       state.expert = action.payload;
     });
 
-    builder.addCase(fetchSetStatus.rejected, (state, action) => {
-      console.log('State', state);
+    builder.addCase(fetchToggleAvailable.rejected, (state, action) => {
+      state.expert.available = false;
+      state.errors = new Array(action.payload.message);
     });
 
-    builder.addCase(fetchSetStatus.pending, (state, action) => {});
+    builder.addCase(fetchToggleAvailable.pending, state => {
+      state.expert.available = false;
+      state.errors = [];
+    });
   },
 });
 

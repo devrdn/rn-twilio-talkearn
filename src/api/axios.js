@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getItem, getToken } from '../utils/storage';
+import { getToken } from '../utils/token';
 
 const api = axios.create({
   baseURL: 'https://core.instantexpert.online/api',
@@ -7,7 +7,7 @@ const api = axios.create({
 
 api.interceptors.request.use(async config => {
   const token = await getToken();
-  if(token) {
+  if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

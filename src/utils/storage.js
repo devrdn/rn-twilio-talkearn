@@ -26,14 +26,3 @@ export const getItem = async (key, cbErr) => {
     cbErr(err);
   }
 };
-
-export const getToken = async () => {
-  try {
-    const token = await AsyncStorage.getItem('AccessToken');
-    console.log(token);
-    return token;
-  } catch (error) {
-    console.log(error);
-    return undefined;
-  }
-};

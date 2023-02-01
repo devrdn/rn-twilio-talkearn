@@ -1,15 +1,7 @@
 import 'react-native-gesture-handler';
 
 import React from 'react';
-import {
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  StatusBar,
-  View,
-  Text,
-  AppRegistry,
-} from 'react-native';
+import { SafeAreaView } from 'react-native';
 
 // components
 import { Navigation } from './src/navigation/Navigation';
