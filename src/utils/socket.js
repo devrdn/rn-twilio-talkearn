@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
 
-const socket = io('https://core.instantexpert.online/');
+const socket = io('https://instantexpert.online/');
 
 export default socket;
