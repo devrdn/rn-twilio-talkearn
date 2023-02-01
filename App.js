@@ -17,11 +17,11 @@ import { Provider } from 'react-redux';
 import { store } from './src/store/store';
 const App = () => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Provider store={store}>
+    <Provider store={store}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Navigation />
-      </Provider>
-    </SafeAreaView>
+      </SafeAreaView>
+    </Provider>
   );
 };
 

@@ -1,7 +1,16 @@
 import axios from 'axios';
+import { getItem, getToken } from '../utils/storage';
 
 const api = axios.create({
-  baseURL: 'https://core.talkearn.app/api',
+  baseURL: 'https://core.instantexpert.online/api',
+});
+
+api.interceptors.request.use(async config => {
+  const token = await getToken();
+  if(token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export default api;

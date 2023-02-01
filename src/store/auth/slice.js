@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchLogin } from './asyncActions';
+import { fetchLogin, fetchSetStatus } from './asyncActions';
 
 /**
  * Initial State
@@ -7,7 +7,9 @@ import { fetchLogin } from './asyncActions';
  * status: UNAUTHORIZED | AUTHORIZED | PENDING
  */
 const initialState = {
-  expert: {},
+  expert: {
+    available: false,
+  },
   token: '',
   isAuth: false,
   errors: [],
@@ -38,6 +40,17 @@ const authSlice = createSlice({
     builder.addCase(fetchLogin.pending, state => {
       state.isAuth = false;
     });
+
+    // Set Expert Status
+    builder.addCase(fetchSetStatus.fulfilled, (state, action) => {
+      state.expert = action.payload;
+    });
+
+    builder.addCase(fetchSetStatus.rejected, (state, action) => {
+      console.log('State', state);
+    });
+
+    builder.addCase(fetchSetStatus.pending, (state, action) => {});
   },
 });
 

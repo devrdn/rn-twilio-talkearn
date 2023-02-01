@@ -1,12 +1,23 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, Text, Pressable } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSetStatus } from '../store/auth/asyncActions';
+import { selectLoginData, selectStatus } from '../store/auth/selectors';
 
 const HomeScreen = ({ navigation }) => {
+  const expertStatus = useSelector(selectStatus);
+  const loginData = useSelector(selectLoginData);
+
+  const dispatch = useDispatch();
   React.useEffect(() => {
     navigation.setOptions({
       title: 'Twilio Video Call',
     });
   });
+
+  const setExpertStatus = () => {
+    dispatch(fetchSetStatus(loginData.expert?.id));
+  }
   return (
     <View style={styles.view}>
       <View style={styles.content}>
@@ -20,6 +31,13 @@ const HomeScreen = ({ navigation }) => {
           style={styles.btn}>
           <Text style={styles.btnText}>Login</Text>
         </Pressable>
+        {expertStatus && (
+          <Pressable
+            onPress={setExpertStatus}
+            style={styles.btn}>
+            <Text style={styles.btnText}>Your is {}</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
