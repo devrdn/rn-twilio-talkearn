@@ -4,11 +4,26 @@ import { useForm, Controller } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 
 // import images
-import { selectLoginData } from '../store/auth/selectors';
+import { selectIsAuth, selectLoginData } from '../store/auth/selectors';
 import LoginForm from '../components/AuthForm/LoginForm';
+import callApi from '../api/callApi';
+import messaging from '@react-native-firebase/messaging';
 
 const LoginScreen = () => {
   const loginData = useSelector(selectLoginData);
+  const isAuth = useSelector(selectIsAuth);
+
+  React.useEffect(() => {
+    if (isAuth) {
+      patchDeviceToken();
+    }
+  }, [loginData]);
+
+  const patchDeviceToken = async () => {
+    await messaging().registerDeviceForRemoteMessages();
+    const token = await messaging().getToken();
+    callApi.patchDeviceToken(token, user.expert.id);
+  };
 
   return (
     <View styles={styles.container}>

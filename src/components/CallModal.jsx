@@ -17,12 +17,14 @@ import {
 } from '../store/call/slice';
 import socket from '../utils/socket';
 
+import messaging from '@react-native-firebase/messaging';
+
 import globalStyles from '../styles';
 
 const CallModal = () => {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const dispatch = useDispatch();
-  const { recipientId, senderId } = useSelector(getCallData);
+  const { recipientId, senderId, isCall } = useSelector(getCallData);
   const isAuth = useSelector(selectIsAuth);
   const user = useSelector(selectLoginData);
   const nav = useNavigation();
@@ -30,8 +32,10 @@ const CallModal = () => {
   React.useEffect(() => {
     if (isAuth) {
       dispatch(setRecipientId(`expert-${user.expert.id}`));
-
-      handleInComingCall();
+      // handle call
+      if (isCall) {
+        handleInComingCall();
+      }
       handleStartCall();
       handleDeclineCall();
     }
