@@ -6,10 +6,10 @@ import VideoCall from '../components/VideoCall';
 
 const __ROOM_NAME = 'test-room';
 
-const VideoCallScreen = ({ navigation, route }) => {
+const VideoCallScreen = ({ navigation }) => {
   return (
     <View>
-      <VideoCall newRoom={route.params.room} newToken={route.params.token} />
+      <VideoCall />
     </View>
   );
 };
