@@ -48,12 +48,10 @@ const authSlice = createSlice({
 
     builder.addCase(fetchToggleAvailable.rejected, (state, action) => {
       state.expert.available = false;
-      state.errors = new Array(action.payload.message);
     });
 
     builder.addCase(fetchToggleAvailable.pending, state => {
       state.expert.available = false;
-      state.errors = [];
     });
   },
 });
