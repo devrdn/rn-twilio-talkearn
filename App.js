@@ -12,6 +12,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { SafeAreaView } from 'react-native';
+
+
 // components
 import { Navigation } from './src/navigation/Navigation';
 import { useDispatch, useSelector } from 'react-redux';
