@@ -15,6 +15,20 @@ import { store } from './src/store/store';
 // import component
 import App from './App';
 import { NavigationContainer } from '@react-navigation/native';
+import messaging from '@react-native-firebase/messaging';
+
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+});
+
+function HeadlessCheck({ isHeadless }) {
+  if (isHeadless) {
+    // App has been launched in the background by iOS, ignore
+    return null;
+  }
+
+  return <Application />;
+}
 
 const Application = () => {
   return (
@@ -26,4 +40,4 @@ const Application = () => {
   );
 };
 
-AppRegistry.registerComponent(appName, () => Application);
+AppRegistry.registerComponent(appName, () => HeadlessCheck);

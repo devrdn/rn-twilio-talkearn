@@ -24,15 +24,29 @@ import { useNavigation } from '@react-navigation/native';
 import CallModal from './src/components/CallModal';
 import { setRecipientId } from './src/store/call/slice';
 import { getCallData } from './src/store/call/selectors';
+import messaging from '@react-native-firebase/messaging';
 
 const App = () => {
-  // todo: make as separate component
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
-  const [modalText, setModalText] = React.useState('');
-  const [senderId, setSenderId] = React.useState('');
+  React.useEffect(() => {
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+    });
 
-  // todo: temporary in this component
-
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+        }
+      });
+  });
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <CallModal />

@@ -10,39 +10,34 @@ import {
   clearCallData,
   clearSenderId,
   setError,
-  setRecipientId,
   setRoomSid,
   setSenderId,
   setToken,
 } from '../store/call/slice';
 import socket from '../utils/socket';
 
-import messaging from '@react-native-firebase/messaging';
-
 import globalStyles from '../styles';
 
 const CallModal = () => {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const recipientId = React.useRef('');
   const dispatch = useDispatch();
-  const { recipientId, senderId, isCall } = useSelector(getCallData);
+  const { senderId } = useSelector(getCallData);
   const isAuth = useSelector(selectIsAuth);
   const user = useSelector(selectLoginData);
   const nav = useNavigation();
 
   React.useEffect(() => {
     if (isAuth) {
-      dispatch(setRecipientId(`expert-${user.expert.id}`));
-      // handle call
-      if (isCall) {
-        handleInComingCall();
-      }
+      recipientId.current = `expert-${user.expert.id}`;
+      handleInComingCall();
       handleStartCall();
       handleDeclineCall();
     }
-  });
+  }, [isAuth]);
 
   const handleInComingCall = () => {
-    socket.on(`inComingCall-${recipientId}`, data => {
+    socket.on(`inComingCall-${recipientId.current}`, data => {
       const callData = JSON.parse(data);
       setIsModalVisible(true);
       dispatch(setSenderId(callData.senderId));
@@ -50,7 +45,7 @@ const CallModal = () => {
   };
 
   const handleStartCall = () => {
-    socket.on(`startCall-${recipientId}`, async identity => {
+    socket.on(`startCall-${recipientId.current}`, async identity => {
       const callInfo = JSON.parse(identity);
       try {
         const { data } = await callApi.getCallToken(callInfo.senderId);
@@ -65,7 +60,7 @@ const CallModal = () => {
   };
 
   const handleDeclineCall = () => {
-    socket.on(`declineCall-${recipientId}`, () => {
+    socket.on(`declineCall-${recipientId.current}`, () => {
       setIsModalVisible(false);
       dispatch(clearSenderId);
     });
@@ -76,7 +71,7 @@ const CallModal = () => {
       'declineCall',
       JSON.stringify({
         senderId,
-        recipientId,
+        recipientId: recipientId.current,
       }),
     );
     setIsModalVisible(false);
@@ -88,7 +83,7 @@ const CallModal = () => {
       'startCall',
       JSON.stringify({
         senderId,
-        recipientId,
+        recipientId: recipientId.current,
       }),
     );
   };

@@ -22,7 +22,7 @@ const LoginScreen = () => {
   const patchDeviceToken = async () => {
     await messaging().registerDeviceForRemoteMessages();
     const token = await messaging().getToken();
-    callApi.patchDeviceToken(token, user.expert.id);
+    callApi.patchDeviceToken(token, loginData.expert.id);
   };
 
   return (
