@@ -1,12 +1,25 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, Text, Pressable } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchToggleAvailable } from '../store/auth/asyncActions';
+import { selectIsAuth, selectLoginData } from '../store/auth/selectors';
 
 const HomeScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+
+  const userData = useSelector(selectLoginData);
+  const isAuth = useSelector(selectIsAuth);
+
   React.useEffect(() => {
     navigation.setOptions({
       title: 'Twilio Video Call',
     });
   });
+
+  const toggleExpertStatus = () => {
+    dispatch(fetchToggleAvailable(userData.expert.id));
+  };
+
   return (
     <View style={styles.view}>
       <View style={styles.content}>
@@ -20,6 +33,16 @@ const HomeScreen = ({ navigation }) => {
           style={styles.btn}>
           <Text style={styles.btnText}>Login</Text>
         </Pressable>
+        {isAuth && (
+          <View>
+            <Text>
+              You are now {userData.expert.available ? 'Online' : 'Offline'}
+            </Text>
+            <Pressable onPress={toggleExpertStatus} style={styles.btn}>
+              <Text style={styles.btnText}>Changle available status</Text>
+            </Pressable>
+          </View>
+        )}
       </View>
     </View>
   );
