@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "68484627966",
+    "firebase_url": "https://instantexpert-763fd-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "instantexpert-763fd",
+    "storage_bucket": "instantexpert-763fd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68484627966:android:edd35fea70e2cdfb2954af",
+        "android_client_info": {
+          "package_name": "com.talkearn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "68484627966-5o3nhvtvg40e02oc212bl1v8p5gjtkjl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAATESsnZDmsxdOJnrbpffAUQtkZkgUV7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "68484627966-5o3nhvtvg40e02oc212bl1v8p5gjtkjl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "68484627966-oeq7rm32g1qdjihvvq65jt6qkgpe4jm7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "instantservice.online"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -26,28 +26,50 @@ import styleSheet from '../styles';
 
 // import components
 import DisconnedctedRoom from './Room/DisconnedctedRoom';
+import socket from '../utils/socket';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearCallData, setIsCall } from '../store/call/slice';
+import { useNavigation } from '@react-navigation/core';
+import { getCallData } from '../store/call/selectors';
 
 const styles = StyleSheet.create(styleSheet);
 
-const __ROOM_NAME = 'test-room';
-
 const VideoCall = () => {
+  const { recipientId, senderId, isCall, roomSid, token } =
+    useSelector(getCallData);
+  const dispatch = useDispatch();
+  const nav = useNavigation();
   const [isAudioEnabled, setIsAudioEnabled] = React.useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = React.useState(true);
   // const [isScreenShareEnabled, setIsScreenShareEnabled] = React.useState(false);
   const [status, setStatus] = React.useState('disconnected');
   const [videoTracks, setVideoTracks] = React.useState(new Map());
-  const [token, setToken] = React.useState('');
   const [isSharing, setIsSharing] = React.useState(false);
   const twilioVideo = React.useRef(null);
 
+  // todo: change method
   React.useEffect(() => {
+    _onConnectButtonPress();
+
     return () => {
       setIsAudioEnabled(true);
       setIsVideoEnabled(false);
       twilioVideo.current?.disconnect();
+      declineCall();
     };
   }, []);
+
+  const declineCall = () => {
+    socket.emit(
+      'declineCall',
+      JSON.stringify({
+        senderId,
+        recipientId,
+      }),
+    );
+    dispatch(clearCallData);
+    nav.navigate('Home');
+  };
 
   const _onConnectButtonPress = async () => {
     // request permissions on Android or IOS
@@ -62,6 +84,7 @@ const VideoCall = () => {
     try {
       await twilioVideo.current.connect({
         accessToken: token,
+        roomName: roomSid,
         enableNetworkQualityReporting: true,
         dominantSpeakerEnabled: true,
       });
@@ -93,21 +116,23 @@ const VideoCall = () => {
 
   const _onRoomDidConnect = room => {
     console.log(room);
+    dispatch(setIsCall(true));
     setStatus('connected');
   };
 
   const _onRoomDidDisconnect = error => {
-    console.log('ERROR: ', error);
+    console.log(error);
+    declineCall();
     setStatus('disconnected');
   };
 
   const _onRoomDidFailToConnect = error => {
     console.log('ERROR: ', error);
-
+    declineCall();
     setStatus('disconnected');
   };
 
-  const _onParticipantAddedVideoTrack = ({participant, track}) => {
+  const _onParticipantAddedVideoTrack = ({ participant, track }) => {
     console.log('onParticipantAddedVideoTrack: ', participant, track);
 
     setVideoTracks(
@@ -115,13 +140,13 @@ const VideoCall = () => {
         ...videoTracks,
         [
           track.trackSid,
-          {participantSid: participant.sid, videoTrackSid: track.trackSid},
+          { participantSid: participant.sid, videoTrackSid: track.trackSid },
         ],
       ]),
     );
   };
 
-  const _onParticipantRemovedVideoTrack = ({participant, track}) => {
+  const _onParticipantRemovedVideoTrack = ({ participant, track }) => {
     console.log('onParticipantRemovedVideoTrack: ', participant, track);
 
     const newVideoTracks = new Map(videoTracks);
@@ -135,61 +160,52 @@ const VideoCall = () => {
 
   return (
     <View style={styles.container}>
-      {status === 'disconnected' && (
-        <DisconnedctedRoom
-          getToken={token => setToken(token)}
-          onConnect={_onConnectButtonPress}
-        />
-      )}
+      {!isCall && <DisconnedctedRoom />}
 
-      {(status === 'connected' || status === 'connecting') && (
-        <View>
-          {status === 'connected' && (
-            <View style={{flex: 1}}>
-              <View>
-                {Array.from(videoTracks, ([trackSid, trackId]) => (
-                  <TwilioVideoParticipantView
-                    style={styles.remoteVideo}
-                    key={trackSid}
-                    trackIdentifier={trackId}
-                  />
-                ))}
-              </View>
-              <View style={styles.optionsContainer}>
-                <View style={styles.options}>
-                  <TouchableOpacity
-                    onPress={_onFlipButtonPress}
-                    style={styles.optionButton}>
-                    <Text style={styles.buttonText}>Flip</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={_onMuteButtonPress}
-                    style={styles.optionButton}>
-                    <Text style={styles.buttonText}>
-                      {isAudioEnabled ? 'Mute' : 'UnMute'}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={_onVideoButtonPress}
-                    style={styles.optionButton}>
-                    <Text style={styles.buttonText}>
-                      {isVideoEnabled ? 'Video OFF' : 'Video ON'}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={_onEndButtonPress}
-                    style={styles.optionButtonEnd}>
-                    <Text style={styles.buttonText}>End</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <TwilioVideoLocalView
-                enabled={true}
-                applyZOrder={true}
-                style={styles.localVideo}
+      {status === 'connected' && (
+        <View style={{ flex: 1 }}>
+          <View>
+            {Array.from(videoTracks, ([trackSid, trackId]) => (
+              <TwilioVideoParticipantView
+                style={styles.remoteVideo}
+                key={trackSid}
+                trackIdentifier={trackId}
               />
+            ))}
+          </View>
+          <View style={styles.optionsContainer}>
+            <View style={styles.options}>
+              <TouchableOpacity
+                onPress={_onFlipButtonPress}
+                style={styles.optionButton}>
+                <Text style={styles.buttonText}>Flip</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={_onMuteButtonPress}
+                style={styles.optionButton}>
+                <Text style={styles.buttonText}>
+                  {isAudioEnabled ? 'Mute' : 'UnMute'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={_onVideoButtonPress}
+                style={styles.optionButton}>
+                <Text style={styles.buttonText}>
+                  {isVideoEnabled ? 'Video OFF' : 'Video ON'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={_onEndButtonPress}
+                style={styles.optionButtonEnd}>
+                <Text style={styles.buttonText}>End</Text>
+              </TouchableOpacity>
             </View>
-          )}
+          </View>
+          <TwilioVideoLocalView
+            enabled={true}
+            applyZOrder={true}
+            style={styles.localVideo}
+          />
         </View>
       )}
 
