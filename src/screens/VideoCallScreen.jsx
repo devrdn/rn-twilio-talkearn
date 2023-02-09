@@ -6,7 +6,7 @@ import VideoCall from '../components/VideoCall';
 
 const __ROOM_NAME = 'test-room';
 
-const VideoCallScreen = ({ navigation }) => {
+const VideoCallScreen = () => {
   return (
     <View>
       <VideoCall />
