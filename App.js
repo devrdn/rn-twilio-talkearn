@@ -12,8 +12,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import { SafeAreaView } from 'react-native';
-
 
 // components
 import { Navigation } from './src/navigation/Navigation';
