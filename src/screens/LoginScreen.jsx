@@ -26,7 +26,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <View styles={styles.container}>
+    <View style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
           style={styles.image}
@@ -36,7 +36,9 @@ const LoginScreen = () => {
           <Text>Loggined as {loginData.expert.name}</Text>
         )}
       </View>
-      <LoginForm errors={loginData.errors} />
+      <View style={styles.form}>
+        <LoginForm errors={loginData.errors} />
+      </View>
     </View>
   );
 };
@@ -44,6 +46,9 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  form: {
+    marginHorizontal: 42,
   },
   imageContainer: {
     alignItems: 'center',
